@@ -1,0 +1,12 @@
+{
+    "test":{
+        "PORT":3000,
+        "MONGODB_URI": "mongodb://localhost:27017/bookclub",
+        "JWT_SECRET":"drhgdthedhsrhhrs4z5zzh5z56z"
+    },
+    "development":{
+        "PORT":3000,
+        "MONGODB_URI": "mongodb://localhost:27017/bookclub",
+        "JWT_SECRET":"drhtz56z6zu6uj6hsrhhrs4z5zzh5z56z"
+    }
+}

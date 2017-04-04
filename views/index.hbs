@@ -1,0 +1,52 @@
+
+
+{{#if isLoggedIn}}
+  <div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+        Your trade request<span>( {{{yourTradeReq}}} outstanding)</span></a>
+      </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse">
+    {{#each request}} 
+      {{>manageRequest2}}
+    {{/each}}   
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+        Trade request for you<span>( {{{otherTradeReq}}} unapproved)</span></a>
+      </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse">
+    {{#each requested}} 
+      {{>manageRequest}}
+    {{/each}}  
+    </div>
+  </div>
+</div>
+{{/if}}   
+
+{{#if ownPage}}
+      <input type="text" class="form-control" id="bookname" placeholder="Add a new book" autocomplete="off">
+{{/if}} 
+
+    
+    
+
+<div class="grid">
+  <div class="grid-sizer"></div>
+    {{#each bookList}}
+      {{>bookElem}}
+    {{/each}}
+</div>
+
+
+
+
+
+

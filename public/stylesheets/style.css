@@ -1,0 +1,77 @@
+
+a:link {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+}
+
+
+.topright {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-size: 18px;
+}
+
+/* force scrollbar */
+html { overflow-y: scroll; }
+
+body { 
+  font-family: sans-serif; 
+  padding: 50px;
+  background: lightgreen;
+  }
+
+/* ---- grid ---- */
+
+* { box-sizing: border-box; }
+
+#newbook {
+  margin-top: 20px;
+}
+
+.panel-body:hover{
+  background: powderblue;
+}
+.panel-body {
+  margin: 0 auto;
+}
+
+#bookname {
+  margin-top: 20px;
+}
+
+.grid {
+  background: #EEE;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top:20px;
+
+}
+
+/* clearfix */
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* ---- grid-item ---- */
+
+.grid-item {
+  width: 180px;
+  float: left;
+  background: #D26;
+  border: 2px solid #333;
+  border-color: hsla(0, 0%, 0%, 0.5);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.grid-item img {
+  display: block;
+  width: 100%;
+}
+
+

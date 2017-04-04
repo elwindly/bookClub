@@ -1,0 +1,14 @@
+<div class="grid-item" name={{this.title}}>
+  <img src={{this.link}} alt={{this.title}}>
+{{#if this.isLoggedIn}}
+  {{#if this.owner}}
+       <i id="{{this.id}}" class="fa fa-times topright delete" aria-hidden="true" ></i>
+  {{else if this.upForTrade}}
+       <i id="{{this.id}}" class="fa fa-exchange topright exchange" aria-hidden="true"></i>
+  {{/if}} 
+{{/if}}
+</div>
+
+
+
+
