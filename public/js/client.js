@@ -25,12 +25,14 @@ $(document).ready(function(){
     });
 
 
-    $( ".delete" ).click(function() {
-        let data = { id:$( this ).attr('id') };
-        let name = $( this ).parent().attr('name');
+    $( document.body).on('click','.delete', function(e) {
+        e.preventDefault();
+        let id = $( this ).attr('id');
+        let data = { id:id };
+        console.log(id);
         ajaxRequest(`${baseUrl}/userLogged/deleteBook`, 'DELETE', data, function(err, data) {
             if (!err) {
-                $grid.masonry( 'remove', $(`[name=${name}]`))
+                $grid.masonry( 'remove', $(`[name=${id}]`))
                     // trigger layout
                     .masonry('layout');
             } else {
@@ -41,7 +43,6 @@ $(document).ready(function(){
 
      $( ".exchange" ).click(function() {
         let data = { id:$( this ).attr('id') };
-        let name = $( this ).parent().attr('name');
         let id = "#" + $( this ).attr('id');
         ajaxRequest(`${baseUrl}/userLogged/requestTrade`, 'PATCH', data, function(err, data) {
             if (!err) {
@@ -86,7 +87,7 @@ $(document).ready(function(){
             let data ={ title:title };
             ajaxRequest(`${baseUrl}/userLogged/newBook`, 'POST', data, function(err, data) {
                 if (!err) {
-                    let html = `<div class="grid-item">`;
+                    let html = `<div class="grid-item" name=${data._id} >`;
                     html += `<img src=${data.link} alt=${data.title}>`;
                     html += `<i id=${data._id} class="fa fa-times topright delete" aria-hidden="true" ></i>`;
                     html += `</div>`;
@@ -96,7 +97,7 @@ $(document).ready(function(){
                         .masonry('layout');
                     jQuery('#bookname').val('');
                 } else {
-                    alert("Please privede a valid title or specify the author!");
+                    alert("Please provide a valid title or specify the author!");
                 }
             });
         }
@@ -143,6 +144,22 @@ $(document).ready(function(){
                 window.location.replace('/');
                 alert('You succesfully logged out');
             } 
+        });
+    });
+
+    jQuery('#options').on('submit', function(e){
+        e.preventDefault();
+        var data ={
+            fullName:jQuery('#fullName').val(),
+            city:jQuery('#city').val(),
+            state:jQuery('#state').val()
+        };
+        ajaxRequest(`${baseUrl}/userLogged/options`, 'POST', data, function(err, data) {
+            if (!err) {
+                alert('You successfully changed your contact information!')
+            } else {
+                alert('Something went wrong');
+            }
         });
     });
 

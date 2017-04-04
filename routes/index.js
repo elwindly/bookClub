@@ -5,6 +5,7 @@ const {ObjectID} = require("mongodb");
 const fetch = require('fetch').fetchUrl;
 const _ = require('lodash');
 const {Book} = require('./../models/books');
+const {User} = require('./..//models/members');
 const {authenticate} = require('./../middleware/authenticate');
 
 /* GET home page. */
@@ -163,23 +164,18 @@ router.get('/userLogged/options',authenticate, (req,res)=> {
 });
 
 router.post('/userLogged/options',authenticate, (req,res)=> {
-    let title = req.body.title;
-    let optList = req.body.option.map((opt)=>{
-      return {option:opt};
-    });
-    const poll = new Poll({
-      title:title,
-      options:optList,
-        _creator:req.user.name
-    });
+    let fullName = req.body.fullName;
+    let city = req.body.city;
+    let state = req.body.state;
 
-    poll.save().then((doc)=>{
-        console.log(doc);
-        res.status(200).send(doc)
-    },(err)=>{
-        console.log(err);
-        res.status(400).send();
-    });
+  User.update( {
+        name: req.session.name,
+      }, {
+         $set: { fullName: fullName, city:city, state:state}}, { new: true },
+      function(err, raw) {
+        if (err) return console.log(err);
+        res.status(200).send();
+      });
 
 });
 
