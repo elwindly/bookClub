@@ -31,12 +31,16 @@
 </div>
 {{/if}}   
 
+
 {{#if ownPage}}
       <input type="text" class="form-control" id="bookname" placeholder="Add a new book" autocomplete="off">
 {{/if}} 
 
-    
-    
+{{#if isLoggedIn}}
+  {{#unless ownPage}}
+    <p>Click the   <i class="fa fa-exchange" aria-hidden="true"></i> to request a trade!</p>
+  {{/unless}}
+{{/if}} 
 
 <div class="grid">
   <div class="grid-sizer"></div>

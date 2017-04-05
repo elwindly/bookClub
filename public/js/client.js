@@ -55,8 +55,11 @@ $(document).ready(function(){
     });   
 
      $( ".cancel" ).click(function() {
-        let data = { id:$( this ).parent().attr('id') };
-        let id = "#" + $( this ).parent().attr('id');
+        let parent = $(this).parent();
+        let idNum = parent.parent().attr('id');
+        let data = { id:idNum };
+        console.log(data);
+        let id = "#" + idNum;
         ajaxRequest(`${baseUrl}/userLogged/cancelTrade`, 'PATCH', data, function(err, data) {
             if (!err) {
               $(id).remove();
@@ -85,6 +88,7 @@ $(document).ready(function(){
         var title = jQuery('#bookname').val();   
         if(event.which == 13 && title != ""){
             let data ={ title:title };
+            jQuery('.grid').prepend('<div id="loader"></div>');
             ajaxRequest(`${baseUrl}/userLogged/newBook`, 'POST', data, function(err, data) {
                 if (!err) {
                     let html = `<div class="grid-item" name=${data._id} >`;
@@ -92,6 +96,7 @@ $(document).ready(function(){
                     html += `<i id=${data._id} class="fa fa-times topright delete" aria-hidden="true" ></i>`;
                     html += `</div>`;
                     var elem = $(html);
+                    jQuery('#loader').remove();
                     $grid.append(elem);
                     $grid.masonry( 'appended', elem )
                         .masonry('layout');
@@ -149,11 +154,26 @@ $(document).ready(function(){
 
     jQuery('#options').on('submit', function(e){
         e.preventDefault();
-        var data ={
-            fullName:jQuery('#fullName').val(),
-            city:jQuery('#city').val(),
-            state:jQuery('#state').val()
-        };
+        var data ={};
+        
+        if (jQuery('#fullName').val() !== "") {
+             data.fullName = jQuery('#fullName').val();
+             jQuery('#cName').text(data.fullName);
+             jQuery('#fullName').val('');
+         }
+        if (jQuery('#city').val() !== "") { 
+             data.city = jQuery('#city').val();
+             jQuery('#cCity').text(data.city);
+             jQuery('#city').val('');
+         }
+        if (jQuery('#state').val() !== "") {
+             data.state = jQuery('#state').val();
+             jQuery('#cState').text(data.state);
+             jQuery('#state').val('');
+         }
+
+        if (!data.fullName && !data.city && !data.state ) { return alert("You didn't change anything!"); }
+        
         ajaxRequest(`${baseUrl}/userLogged/options`, 'POST', data, function(err, data) {
             if (!err) {
                 alert('You successfully changed your contact information!')
