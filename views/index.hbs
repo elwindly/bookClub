@@ -1,6 +1,6 @@
 
 
-{{#if isLoggedIn}}
+{{#if user}}
   <div class="panel-group" id="accordion">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -36,7 +36,7 @@
       <input type="text" class="form-control" id="bookname" placeholder="Add a new book" autocomplete="off">
 {{/if}} 
 
-{{#if isLoggedIn}}
+{{#if user}}
   {{#unless ownPage}}
     <p>Click the   <i class="fa fa-exchange" aria-hidden="true"></i> to request a trade!</p>
   {{/unless}}

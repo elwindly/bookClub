@@ -32,6 +32,10 @@ app.use(session({
     store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
+app.use((req, res, next) => {
+  res.locals.user =  req.session.name;
+  next();
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 

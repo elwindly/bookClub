@@ -1,9 +1,15 @@
 <nav class="navbar navbar-inverse bg-primary">
   <div class="container-fluid">
     <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
       <a class="navbar-brand" href="/">Book Club</a>
     </div>
-   {{#if isLoggedIn}}
+    <div class="collapse navbar-collapse" id="myNavbar">  
+   {{#if user}}
     <ul class="nav navbar-nav">
       <li><a href="/">All books</a></li>
       <li><a href="/userLogged">My Books</a></li>
@@ -11,13 +17,14 @@
     </ul>
     {{/if}}
     <ul class="nav navbar-nav navbar-right">
-    {{#if isLoggedIn}}
+    {{#if user}}
     <li><a href="#" name="logOut" id="logOut"><span class="glyphicon glyphicon-user"></span> Log out</a></li>
     {{else}}
       <li><a href="#" data-toggle="modal" data-target="#signUpModal"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
       <li><a href="#" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
       {{/if}}
     </ul>
+    </div>
   </div>
 </nav>
 
@@ -43,9 +50,11 @@
             <button type="submit" class="btn btn-default">Submit</button>
         </form>
       </div>
+        <div id="loginError"></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
+    </div>
     </div>
   </div>
 </div>
@@ -76,6 +85,7 @@
             <button type="submit" class="btn btn-default">Submit</button>
         </form>
       </div>
+      <div id="signUpError"></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>

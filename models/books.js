@@ -10,9 +10,9 @@ const commonRules = {
 var BookSchema = new mongoose.Schema({
     title:commonRules,
     link:commonRules,
-    owner:commonRules,
+    owner:{type: Schema.ObjectId, ref: 'User', required: true},
     isAskedForTrade:{ type:Boolean, default:false },
-    askerName: { type: String },
+    asker: {type: Schema.ObjectId, ref: 'User', required: true},
     isAcceptedByOwner:{ type:Boolean, default:false }
 });
 

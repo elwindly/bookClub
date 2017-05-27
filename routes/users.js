@@ -28,11 +28,13 @@ router.post('/', (req,res)=> {
                     return user.generateAuthToken();
                 }).then((token)=>{           
                     //res.header('x-auth', token).send(user);
+                    console.log(token);
                     req.session.xAuth = token;
                     req.session.name = body.name;
+                    req.session._id = user._id;
                     res.status(200).send();
                 }).catch((e)=>{
-                    res.status(400).send(e)
+                    res.status(400).send()
                 });
             }       
         });
@@ -51,7 +53,7 @@ router.post('/login',(req,res)=>{
             res.redirect('/userLogged');
         });
     }).catch((e)=>{
-        res.status(409).send({message: "Invalid username. email or password"});
+        res.status(409).send({message: "Invalid credinials!"});
     });
 });
 

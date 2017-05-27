@@ -1,19 +1,5 @@
 var baseUrl = location.origin;
 
-function ajaxRequest(url, method, data, callback) {
-    $.ajax({
-        url: url,
-        type: method,
-        data: data,
-        success: function(data, textStatus, request) {
-            callback(null, data);
-        },
-        error: function(e) {
-            callback(e);
-        }
-    });   
-}
-
 $(document).ready(function(){
 
     var $grid = $('.grid').imagesLoaded( function() {
@@ -23,6 +9,18 @@ $(document).ready(function(){
             gutter:10
         }); 
     });
+
+    function addWarning(selector, message) {
+        $(selector).html('');
+        var html = 
+            `
+            <div class="alert alert-warning alert-dismissable fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${message}</strong> 
+            </div>               
+        `;
+            $(selector).append(html);
+    }
 
 
     $( document.body).on('click','.delete', function(e) {
@@ -108,50 +106,6 @@ $(document).ready(function(){
         }
     });
 
-    //user login
-    jQuery('#login').on('submit', function(e){
-        e.preventDefault();
-        var data ={
-            emailLog:jQuery('[name=emailLog]').val(),
-            pwdLog:jQuery('[name=pwdLog]').val()
-        };
-        ajaxRequest(`${baseUrl}/users/login`, 'POST', data, function(err, data) {
-            if (!err) {
-                window.location.replace('/userLogged');
-            } else {
-                alert('"Invalid username. email or password"');
-            }
-        });
-    });
-
-    //user signup
-    jQuery('#signUp').on('submit',function(e){
-        e.preventDefault();
-        var data ={
-            email:jQuery('[name=email]').val(),
-            password:jQuery('[name=password]').val(),
-            name:jQuery('[name=name]').val()
-        };
-        ajaxRequest(`${baseUrl}/users`, 'POST', data, function(err, data) {
-            if (!err) {
-                window.location.replace('/userLogged');
-            } else {
-                alert("Username or email is already in use!");
-            }
-        });
-    });
-
-    //user log out
-    jQuery('#logOut').on('click',function(e){
-        e.preventDefault();
-        ajaxRequest(`${baseUrl}/users/me/token`, 'DELETE', {}, function(err, data) {
-            if (!err) {
-                window.location.replace('/');
-                alert('You succesfully logged out');
-            } 
-        });
-    });
-
     jQuery('#options').on('submit', function(e){
         e.preventDefault();
         var data ={};
@@ -181,48 +135,78 @@ $(document).ready(function(){
                 alert('Something went wrong');
             }
         });
+    });    
+
+///// User handling logic start  
+
+    //modal handling
+
+    $('#loginModal').modal({ backdrop: 'static', keyboard: false, show: false });
+    $('#signUpModal').modal({ backdrop: 'static', keyboard: false, show: false });
+
+
+    $('#loginModal').on('hide.bs.modal', function () {
+        $('#loginError').empty();
+        jQuery('[name=emailLog]').val('');
+        jQuery('[name=pwdLog]').val('');
+    })
+
+    $('#signUpModal').on('hide.bs.modal', function () {
+        $('#signUpError').empty();
+        jQuery('[name=email]').val('');
+        jQuery('[name=password]').val('');
+        jQuery('[name=name]').val('');
+    })
+
+
+    //user login
+    jQuery('#login').on('submit', function(e){
+        e.preventDefault();
+        var data ={
+            emailLog:jQuery('[name=emailLog]').val(),
+            pwdLog:jQuery('[name=pwdLog]').val()
+        };
+        ajaxRequest(`${baseUrl}/users/login`, 'POST', data, function(err, data) {
+            if (!err) {
+                window.location.replace('/userLogged');
+            } else {
+                addWarning('#loginError', "Invalid Credentials");    
+            }
+        });
     });
+
+    //user signup
+    jQuery('#signUp').on('submit',function(e){
+        e.preventDefault();
+        var data ={
+            email:jQuery('[name=email]').val(),
+            password:jQuery('[name=password]').val(),
+            name:jQuery('[name=name]').val()
+        };
+        ajaxRequest(`${baseUrl}/users`, 'POST', data, function(err, data) {
+            if (!err) {
+                window.location.replace('/userLogged');
+            } else {
+                addWarning('#signUpError', err.responseText);
+            }
+        });
+    });
+
+    //user log out
+    jQuery('#logOut').on('click',function(e){
+        e.preventDefault();
+        ajaxRequest(`${baseUrl}/users/me/token`, 'DELETE', {}, function(err, data) {
+            if (!err) {
+                window.location.replace('/');
+            } 
+        });
+    });
+
+
+ ///// User handling logic end
+
+
 
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// var x = location.origin;
-// console.log(x);
-// console.log(`${x}/api/getPools`);
-// fetch(`${x}/api/getPools`)
-//   .then((res)=>{
-//     //console.log(JSON.stringify(result,'',2));
-//     return res.json();
-//   })
-//   .then((polls)=>{
-//       console.log(polls);
-//   })
-//   .catch((err)=>{
-//     console.log(err);
-//   });

@@ -18,16 +18,16 @@ router.get('/', (req,res)=> {
   Book.find().then((books)=>{  
     let bookList = books.map((book)=>{
       if (isLoggedIn) {
-        if (book.owner == req.session.name && book.isAskedForTrade) {
+        if (book.owner == req.session._id && book.isAskedForTrade) {
           if (!book.isAcceptedByOwner) { otherTradeReq++; }
           askedFromYouList.push({bookName: book.title, id:book._id, completed:book.isAcceptedByOwner});
         }
-        if (book.askerName == req.session.name) {
+        if (book.askerName == req.session._id) {
           if (!book.isAcceptedByOwner) { yourTradeReq++; }
           askedList.push({bookName: book.title, id:book._id, completed:book.isAcceptedByOwner});
         } 
       }
-      let owner = req.session.name ? req.session.name == book.owner : false;
+      let owner = req.session._id ? req.session._id == book.owner : false;
       return {title:book.title, link:book.link, owner:owner, upForTrade: !book.isAskedForTrade, id:book._id, isLoggedIn:isLoggedIn};
     });
    // console.log(bookList);
@@ -47,31 +47,31 @@ router.get('/', (req,res)=> {
 });
 
 router.get('/userLogged',authenticate, (req,res)=> {
-  const name = req.user.name;
+  const id = req.user._id;
   let isLoggedIn = req.session.xAuth ? true : false;
   let askedList = [];
   let askedFromYouList= []; 
   let bookList = [];
   let otherTradeReq = 0;
   let yourTradeReq = 0;
-  Book.find({"$or" : [{owner: name}, {askerName : name}]}).then((books)=>{  
+  Book.find({"$or" : [{owner: id}, {askerName : id}]}).then((books)=>{  
     let iterate = books.map((book)=>{
-        if (book.owner == req.session.name && book.isAskedForTrade) {
+        if (book.owner == id && book.isAskedForTrade) {
           if (!book.isAcceptedByOwner) { otherTradeReq++; }
           askedFromYouList.push({bookName: book.title, id:book._id, completed:book.isAcceptedByOwner});
         }
-        if (book.askerName == req.session.name) {
+        if (book.asker == id) {
           if (!book.isAcceptedByOwner) { yourTradeReq++; }
           askedList.push({bookName: book.title, id:book._id, completed:book.isAcceptedByOwner});
         } 
-        if (book.owner === name) {
+        if (book.owner === id) {
           bookList.push({title:book.title, link:book.link, owner:true, id:book._id, isLoggedIn:isLoggedIn });
         }
         return 0;      
     });
     res.render('index', { 
       title: 'Logged in' ,
-      name:name,
+      name:req.user.name,
       isLoggedIn:true,
       bookList:bookList,
       ownPage: true,
@@ -84,7 +84,7 @@ router.get('/userLogged',authenticate, (req,res)=> {
 });
 
 router.post('/userLogged/newBook',authenticate, (req,res)=> {
-  const name = req.user.name;
+
   let title = req.body.title;
   fetch(`https://stark-hamlet-16318.herokuapp.com/imagesearch/${title}?offset=10`, (err, meta,body)=>{
       if (err) {return res.status(400).send(); }
@@ -95,7 +95,7 @@ router.post('/userLogged/newBook',authenticate, (req,res)=> {
       let book = new Book({
           title: title,
           link: results[rand].thumbnailUrl,
-          owner:name
+          owner:req.user._id
       });
       book.save().then((book)=>{
         return res.status(200).send(book);
@@ -112,7 +112,7 @@ router.delete('/userLogged/deleteBook',authenticate, (req,res)=> {
   }
     Book.findOneAndRemove({
         _id:bookId,
-        owner:req.session.name
+        owner:req.user._id
     }).then((book)=>{
         if(!book){
             return res.status(404).send();
@@ -121,7 +121,22 @@ router.delete('/userLogged/deleteBook',authenticate, (req,res)=> {
     }).catch((e)=> res.status(404).send(e));
 });
 
-router.patch('/userLogged/requestTrade', (req,res)=> {
+router.patch('/userLogged/requestTrade', authenticate, (req,res)=> {
+  let bookId = req.body.id;
+  if(!ObjectID.isValid(bookId)){
+    return res.status(404).send();
+  }
+  Book.update( {
+        _id: bookId,
+      }, {
+         $set: { isAskedForTrade: true, asker: req.user._id }}, { new: true },
+      function(err, raw) {
+        if (err) return status(400).send();
+        res.status(200).send();
+      });
+});
+
+router.patch('/userLogged/cancelTrade', authenticate,(req,res)=> {
   let bookId = req.body.id;
   if(!ObjectID.isValid(bookId)){
     return res.status(404).send(e);
@@ -129,29 +144,14 @@ router.patch('/userLogged/requestTrade', (req,res)=> {
   Book.update( {
         _id: bookId,
       }, {
-         $set: { isAskedForTrade: true, askerName: req.session.name }}, { new: true },
+         $set: { isAskedForTrade: false, asker: null }}, { new: true },
       function(err, raw) {
         if (err) return console.log(err);
         res.status(200).send();
       });
 });
 
-router.patch('/userLogged/cancelTrade', (req,res)=> {
-  let bookId = req.body.id;
-  if(!ObjectID.isValid(bookId)){
-    return res.status(404).send(e);
-  }
-  Book.update( {
-        _id: bookId,
-      }, {
-         $set: { isAskedForTrade: false, askerName: "" }}, { new: true },
-      function(err, raw) {
-        if (err) return console.log(err);
-        res.status(200).send();
-      });
-});
-
-router.patch('/userLogged/acceptTrade', (req,res)=> {
+router.patch('/userLogged/acceptTrade', authenticate,(req,res)=> {
   let bookId = req.body.id;
   if(!ObjectID.isValid(bookId)){
     return res.status(404).send(e);
