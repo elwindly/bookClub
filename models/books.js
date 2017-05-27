@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const commonRules = {
     type:String,
@@ -10,9 +11,9 @@ const commonRules = {
 var BookSchema = new mongoose.Schema({
     title:commonRules,
     link:commonRules,
-    owner:{type: Schema.ObjectId, ref: 'User', required: true},
+    owner:{type: Schema.Types.ObjectId, ref: 'User', required: true},
     isAskedForTrade:{ type:Boolean, default:false },
-    asker: {type: Schema.ObjectId, ref: 'User', required: true},
+    asker: {type: Schema.Types.ObjectId, ref: 'User'},
     isAcceptedByOwner:{ type:Boolean, default:false }
 });
 

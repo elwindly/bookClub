@@ -3,7 +3,7 @@ const {ObjectID} = require('mongodb');
 const {Book} = require('./books');
 const fetch = require('fetch').fetchUrl;
 const user = new ObjectID();
-const user2 ="5863f9d42766682f7850c898"
+const user2 ="58e3951e31fbf8119492ab92"
 const books = require('google-books-search');
 
 var options = {
@@ -14,16 +14,16 @@ var options = {
     order: 'relevance',
     lang: 'en'
 };
-books.search("Egri csillagok", options, function(error, results, apiResponse) {
-    if ( ! error ) {
-        for(let i = 0;i < results.length; i++) {
-          console.log(results[i].title);
-          //console.log(results[i].thumbnail);
-        }
-    } else {
-        console.log(error);
-    }
-});
+// books.search("Egri csillagok", options, function(error, results, apiResponse) {
+//     if ( ! error ) {
+//         for(let i = 0;i < results.length; i++) {
+//           console.log(results[i].title);
+//           //console.log(results[i].thumbnail);
+//         }
+//     } else {
+//         console.log(error);
+//     }
+// });
   // Book.find({"$or" : [{owner: "tester"}, {askerName : "tester"}]}).then((books)=>{  
   //   let bookList = books.map((book)=>{
   //     //return _.pick(book,['title','link','_id','isAskedForTrade']);
@@ -36,27 +36,27 @@ books.search("Egri csillagok", options, function(error, results, apiResponse) {
     // let bookList = [1,2,3,];
     // let edfse = bookList.length;
     // console.log(edfse);
-// let terms = ["Protected man", "Édes Anna", "Anne of green gables", "1984", "Egri Csillagok"]
+ let terms = ["Protected men robert merle", "Édes Anna", "Anne of green gables", "1984", "Egri Csillagok"]
 
-// for (let i = 0; i < terms.length;i++) {
-//     let term = terms[i];
-let term = "Protected man";
-// fetch(`https://stark-hamlet-16318.herokuapp.com/imagesearch/${term}?offset=1`, (err, meta,body)=>{
-//     let rand = Math.floor(Math.random() * 10);
-//     let results = JSON.parse(body);
-//     console.log(results);
-//     //console.log(results[rand].thumbnailUrl);
-//     // let book = new Book({
-//     //     title: term,
-//     //     link: results[rand].thumbnailUrl,
-//     //     owner:"tester",
-//     // })
-//     // book.save().then((book)=>{
-//     //   console.log(book);
-//     // });
-// });
+for (let i = 0; i < terms.length;i++) {
+    let term = terms[i];
 
-//}
+fetch(`https://stark-hamlet-16318.herokuapp.com/imagesearch/${term} book cover?offset=5`, (err, meta,body)=>{
+    let rand = Math.floor(Math.random() * 5);
+    let results = JSON.parse(body);
+    console.log(results);
+    //console.log(results[rand].thumbnailUrl);
+    let book = new Book({
+        title: term,
+        link: results[rand].thumbnailUrl,
+        owner:user2,
+    })
+    book.save().then((book)=>{
+      console.log(book);
+    });
+});
+
+}
 // fetch(`https://stark-hamlet-16318.herokuapp.com/imagesearch/${term}?offset=10`, (err, meta,body)=>{
 //     let rand = Math.floor(Math.random() * 10);
 //     let results = JSON.parse(body);

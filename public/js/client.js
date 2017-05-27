@@ -56,7 +56,6 @@ $(document).ready(function(){
         let parent = $(this).parent();
         let idNum = parent.parent().attr('id');
         let data = { id:idNum };
-        console.log(data);
         let id = "#" + idNum;
         ajaxRequest(`${baseUrl}/userLogged/cancelTrade`, 'PATCH', data, function(err, data) {
             if (!err) {
@@ -82,11 +81,13 @@ $(document).ready(function(){
             }
         });
     });   
+
      $('#bookname').keypress(function(event){
-        var title = jQuery('#bookname').val();   
+        var title = jQuery('#bookname').val().trim();  
+
         if(event.which == 13 && title != ""){
             let data ={ title:title };
-            jQuery('.grid').prepend('<div id="loader"></div>');
+
             ajaxRequest(`${baseUrl}/userLogged/newBook`, 'POST', data, function(err, data) {
                 if (!err) {
                     let html = `<div class="grid-item" name=${data._id} >`;
@@ -168,7 +169,7 @@ $(document).ready(function(){
         };
         ajaxRequest(`${baseUrl}/users/login`, 'POST', data, function(err, data) {
             if (!err) {
-                window.location.replace('/userLogged');
+                window.location.replace(`${baseUrl}/userLogged`);
             } else {
                 addWarning('#loginError', "Invalid Credentials");    
             }
@@ -185,7 +186,7 @@ $(document).ready(function(){
         };
         ajaxRequest(`${baseUrl}/users`, 'POST', data, function(err, data) {
             if (!err) {
-                window.location.replace('/userLogged');
+                window.location.replace(`${baseUrl}/userLogged`);
             } else {
                 addWarning('#signUpError', err.responseText);
             }
