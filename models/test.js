@@ -45,15 +45,15 @@ fetch(`https://stark-hamlet-16318.herokuapp.com/imagesearch/${term} book cover?o
     let rand = Math.floor(Math.random() * 5);
     let results = JSON.parse(body);
     console.log(results);
-    //console.log(results[rand].thumbnailUrl);
-    let book = new Book({
-        title: term,
-        link: results[rand].thumbnailUrl,
-        owner:user2,
-    })
-    book.save().then((book)=>{
-      console.log(book);
-    });
+    // //console.log(results[rand].thumbnailUrl);
+    // let book = new Book({
+    //     title: term,
+    //     link: results[rand].thumbnailUrl,
+    //     owner:user2,
+    // })
+    // book.save().then((book)=>{
+    //   console.log(book);
+    // });
 });
 
 }

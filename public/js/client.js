@@ -95,7 +95,7 @@ $(document).ready(function(){
                     html += `<i id=${data._id} class="fa fa-times topright delete" aria-hidden="true" ></i>`;
                     html += `</div>`;
                     var elem = $(html);
-                    jQuery('#loader').remove();
+       
                     $grid.append(elem);
                     $grid.masonry( 'appended', elem )
                         .masonry('layout');

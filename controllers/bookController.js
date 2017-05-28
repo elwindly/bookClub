@@ -3,15 +3,16 @@ const {ObjectID} = require("mongodb");
 const _ = require('lodash');
 const {Book} = require('./../models/books');
 const {User} = require('./..//models/members');
-const fetch = require('fetch');
-
+const fetch = require('fetch').fetchUrl;
 function BookController () {
 
     this.createBook = ((req, res) => {
         let title = req.body.title;
-        fetch(`https://stark-hamlet-16318.herokuapp.com/imagesearch/${title}?offset=10`, (err, meta,body)=>{
-            if (err) {return res.status(400).send(); }
-            let rand = Math.floor(Math.random() * 3);
+
+        fetch(`https://stark-hamlet-16318.herokuapp.com/imagesearch/${title} book cover?offset=5`, (err, meta, body)=> {
+
+            if (err) { return res.status(400).send(); }
+            let rand = Math.floor(Math.random() * 5);
             let results = JSON.parse(body);
             if (results.length < 1) {return res.status(400).send(); }
 
