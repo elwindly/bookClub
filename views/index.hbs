@@ -31,16 +31,24 @@
 </div>
 {{/if}}   
 
+{{#unless user}}
+<div class="jumbotron">
+    <h1>Welcome to the book trading club!</h1>      
+    <p>Just sign up and start trading right away!</p>
+  </div>
+{{/unless}}
+
+{{#if user}}
+  {{#unless ownPage}}
+      <p>Click the   <i class="fa fa-exchange" aria-hidden="true"></i> to request a trade!</p>
+  {{/unless}}
+ {{/if}}
 
 {{#if ownPage}}
       <input type="text" class="form-control" id="bookname" placeholder="Add a new book" autocomplete="off">
 {{/if}} 
 
-{{#if user}}
-  {{#unless ownPage}}
-    <p>Click the   <i class="fa fa-exchange" aria-hidden="true"></i> to request a trade!</p>
-  {{/unless}}
-{{/if}} 
+
 
 <div class="grid">
   <div class="grid-sizer"></div>
